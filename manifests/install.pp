@@ -26,17 +26,18 @@ define dotfiles::install(
     cwd       => $home,
     command   => "git clone --depth=1 ${dotfiles::config::repo_url} ${home}/.yadr || (rmdir ${home}/.yadr && exit 1)",
     path      => ['/bin', '/usr/bin', '/usr/local/bin'],
-    onlyif    => "getent passwd ${name} | cut -d : -f 6 | xargs test -e",
+    onlyif    => "test ! -d ${home}/.yadr && getent passwd ${name} | cut -d : -f 6 | xargs test -e",
     user      => $name,
     require   => Package[$dotfiles::config::git_package_name],
     logoutput => true,
   }
   ~>
   exec { "backup ${name} zshrc":
-    command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
-    path    => ['/bin', '/usr/bin'],
-    user    => $name,
-    onlyif  => "test ! -d ${home}/.yadr && test -e ${home}/.zshrc"
+    command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig; rm -f ${home}/.zshrc",
+    path        => ['/bin', '/usr/bin'],
+    user        => $name,
+    onlyif      => "test -e ${home}/.zshrc"
+    refreshonly => true,
   }
   ~>
   ruby::rake { "dotfiles:yadr:${name} rake install":
@@ -44,7 +45,7 @@ define dotfiles::install(
     task        => 'install',
     user        => $name,
     logoutput   => true,
-    refreshonly => true,
+    creates     => "${home}/.zshrc",
   }
   ->
   Anchor["dotfiles:install:${name}:end"]
