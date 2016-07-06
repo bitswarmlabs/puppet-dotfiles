@@ -62,6 +62,8 @@ define dotfiles::install(
   file { "${home}/.zshrc":
     ensure  => file,
     source  => '/etc/zsh/newuser.zshrc.recommended',
+    owner   => $name,
+    group   => $name,
     replace => false,
   }
 
