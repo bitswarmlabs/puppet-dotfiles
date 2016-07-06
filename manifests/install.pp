@@ -33,7 +33,7 @@ define dotfiles::install(
   }
   ~>
   exec { "backup ${name} zshrc":
-    command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
+    command     => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
     path        => ['/bin', '/usr/bin'],
     user        => $name,
     onlyif      => "test -e ${home}/.zshrc",
@@ -43,18 +43,24 @@ define dotfiles::install(
   ~>
   ruby::rake { "dotfiles:yadr:${name} rake install":
     cwd         => "${home}/.yadr",
-    task        => "install --trace | tee ${home}/.yadr/rake.log",
+    task        => "install",
     user        => $name,
-    logoutput   => true,
-    creates     => "${home}/.yadr/rake.log",
-    environment => [ "HOME=${home}" ]
+    environment => [ "HOME=${home}" ],
+    creates     => "${home}/.yadr-installed",
+  }
+  ~>
+  exec { "echo `date` > ${home}/.yadr-installed":
+    cwd         => $home,
+    path        => '/bin',
+    user        => $name,
+    refreshonly => true,
   }
   ->
   Anchor["dotfiles:install:${name}:end"]
 
   file { "${home}/.zshrc":
-    ensure => file,
-    source => '/etc/zsh/newuser.zshrc.recommended',
+    ensure  => file,
+    source  => '/etc/zsh/newuser.zshrc.recommended',
     replace => false,
   }
 
