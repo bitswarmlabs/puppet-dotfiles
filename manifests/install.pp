@@ -42,7 +42,7 @@ define dotfiles::install(
   ~>
   ruby::rake { "dotfiles:yadr:${name} rake install":
     cwd         => "${home}/.yadr",
-    task        => 'install',
+    task        => 'install --trace',
     user        => $name,
     logoutput   => true,
     creates     => "${home}/.zshrc",
