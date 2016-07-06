@@ -36,7 +36,7 @@ define dotfiles::install(
     command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig; rm -f ${home}/.zshrc",
     path        => ['/bin', '/usr/bin'],
     user        => $name,
-    onlyif      => "test -e ${home}/.zshrc"
+    onlyif      => "test -e ${home}/.zshrc",
     refreshonly => true,
   }
   ~>
