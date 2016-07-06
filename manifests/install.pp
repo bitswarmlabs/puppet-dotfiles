@@ -47,6 +47,7 @@ define dotfiles::install(
     user        => $name,
     environment => [ "HOME=${home}" ],
     creates     => "${home}/.yadr-installed",
+    require     => File["${home}/.zshrc"],
   }
   ~>
   exec { "echo `date` > ${home}/.yadr-installed":
