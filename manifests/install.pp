@@ -22,12 +22,13 @@ define dotfiles::install(
   anchor { "dotfiles:install:${name}:begin": }
   ->
   exec { "dotfiles:yadr:${name} git clone ":
-    creates => "${home}/.yadr",
-    command => "git clone --depth=1 ${dotfiles::config::repo_url} ${home}/.yadr || (rmdir ${home}/.yadr && exit 1)",
-    path    => ['/bin', '/usr/bin', '/usr/local/bin'],
-    onlyif  => "getent passwd ${name} | cut -d : -f 6 | xargs test -e",
-    user    => $name,
-    require => Package[$dotfiles::config::git_package_name],
+    creates   => "${home}/.yadr",
+    command   => "git clone --depth=1 ${dotfiles::config::repo_url} ${home}/.yadr || (rmdir ${home}/.yadr && exit 1)",
+    path      => ['/bin', '/usr/bin', '/usr/local/bin'],
+    onlyif    => "getent passwd ${name} | cut -d : -f 6 | xargs test -e",
+    user      => $name,
+    require   => Package[$dotfiles::config::git_package_name],
+    logoutput => true,
   }
   ~>
   ruby::rake { "dotfiles:yadr:${name} rake install":
