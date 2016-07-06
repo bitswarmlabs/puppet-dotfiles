@@ -42,7 +42,42 @@
 #
 # Copyright 2016 Your name here, unless otherwise noted.
 #
-class dotfiles {
+class dotfiles(
+  $manage_zsh      = 'UNSET',
+  $manage_git      = 'UNSET'
+) inherits dotfiles::params {
+  include 'dotfiles::config'
+
+  $_manage_zsh = $manage_zsh ? {
+    'UNSET' => $dotfiles::config::manage_zsh,
+    default => $manage_zsh,
+  }
+
+  $_manage_git = $manage_git ? {
+    'UNSET' => $dotfiles::config::manage_git,
+    default => $manage_git,
+  }
 
 
+  anchor { 'dotfiles::begin': }
+
+  if str2bool($_manage_zsh) {
+    if ! defined(Package[$dotfiles::config::zsh_package_name]) {
+      package { $dotfiles::config::zsh_package_name:
+        ensure => present,
+      }
+      ~>Anchor['dotfiles::end']
+    }
+  }
+
+  if str2bool($_manage_git) {
+    if ! defined(Package[$dotfiles::config::git_package_name]) {
+      package { $dotfiles::config::git_package_name:
+        ensure => present,
+      }
+      ~>Anchor['dotfiles::end']
+    }
+  }
+
+  anchor { 'dotfiles::end': }
 }
