@@ -33,7 +33,7 @@ define dotfiles::install(
     user => $name,
   }
 
-  exec { 'backup zshrc':
+  exec { "backup ${name} zshrc":
     cmd     => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
     path    => ['/bin', '/usr/bin'],
     onlyif  => "test ! -d ${home}/.yadr && test -e ${home}/.zshrc"

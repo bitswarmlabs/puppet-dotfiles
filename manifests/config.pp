@@ -3,6 +3,7 @@ class dotfiles::config(
   $zsh                   = $dotfiles::params::zsh,
   $manage_user           = $dotfiles::params::manage_user,
   $set_sh                = $dotfiles::params::set_sh,
+  $reset_sh              = $dotfiles::params::reset_sh,
   $disable_auto_update   = $dotfiles::params::disable_auto_update,
   $disable_update_prompt = $dotfiles::params::disable_update_prompt,
   $repo_url              = $dotfiles::params::repo_url,
