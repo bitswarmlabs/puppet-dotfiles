@@ -50,18 +50,18 @@ define dotfiles::install(
   Anchor["dotfiles:install:${name}:end"]
 
   if $_set_sh {
-    if str2bool($ohmyzsh::config::manage_user) and ! defined(User[$name]) {
-      user { "ohmyzsh::user ${name}":
+    if str2bool($dotfiles::config::manage_user) and ! defined(User[$name]) {
+      user { "dotfiles::user ${name}":
         ensure     => present,
         name       => $name,
         managehome => true,
-        shell      => $ohmyzsh::config::zsh,
-        require    => Package[$ohmyzsh::config::zsh_package_name],
+        shell      => $dotfiles::config::zsh,
+        require    => Package[$dotfiles::config::zsh_package_name],
       }
       ~>Anchor["dotfiles:install:${name}:end"]
     } else {
       User <| title == $name |> {
-        shell => $ohmyzsh::config::zsh
+        shell => $dotfiles::config::zsh
       }
     }
   }
