@@ -46,6 +46,7 @@ define dotfiles::install(
     user        => $name,
     logoutput   => true,
     creates     => "${home}/.zshrc",
+    environment => [ "HOME=${home}" ]
   }
   ->
   Anchor["dotfiles:install:${name}:end"]
