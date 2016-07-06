@@ -60,7 +60,7 @@ define dotfiles::install(
   Anchor["dotfiles:install:${name}:end"]
 
   file { "${home}/.zshrc":
-    ensure  => file,
+    ensure  => present,
     source  => '/etc/zsh/newuser.zshrc.recommended',
     owner   => $name,
     group   => $name,
