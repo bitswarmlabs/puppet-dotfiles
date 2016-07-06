@@ -21,7 +21,7 @@ define dotfiles::install(
 
   exec { "dotfiles:yadr:${name} git clone ":
     creates => "${home}/.dotfiles",
-    command => "(git clone --depth=1 ${dotfiles::config::repo_url} ${home}/.yadr && rm -f ${home}/.zshrc) || (rmdir ${home}/.yadr && exit 1)",
+    command => "git clone --depth=1 ${dotfiles::config::repo_url} ${home}/.yadr && rm -f ${home}/.zshrc || (rmdir ${home}/.yadr && exit 1)",
     path    => ['/bin', '/usr/bin', '/usr/local/bin'],
     onlyif  => "getent passwd ${name} | cut -d : -f 6 | xargs test -e",
     user    => $name,
