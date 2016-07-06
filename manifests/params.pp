@@ -4,7 +4,7 @@ class dotfiles::params {
 
   $manage_zsh = true
   $zsh_package_name = 'zsh'
-  
+
   $manage_git = true
   $git_package_name = 'git'
 
