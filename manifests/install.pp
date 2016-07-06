@@ -3,6 +3,7 @@ define dotfiles::install(
 ) {
   include 'dotfiles'
   include 'dotfiles::config'
+  include 'ruby::dev'
 
 
   if $set_sh == undef or $set_sh == true {
