@@ -43,10 +43,10 @@ define dotfiles::install(
   ~>
   ruby::rake { "dotfiles:yadr:${name} rake install":
     cwd         => "${home}/.yadr",
-    task        => 'install --trace',
+    task        => "install --trace | tee ${home}/.yadr/rake.log",
     user        => $name,
     logoutput   => true,
-    creates     => "${home}/.zshrc",
+    creates     => "${home}/.yadr/rake.log",
     environment => [ "HOME=${home}" ]
   }
   ->
