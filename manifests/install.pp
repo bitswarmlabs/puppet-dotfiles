@@ -34,7 +34,7 @@ define dotfiles::install(
   }
 
   exec { "backup ${name} zshrc":
-    cmd     => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
+    command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
     path    => ['/bin', '/usr/bin'],
     onlyif  => "test ! -d ${home}/.yadr && test -e ${home}/.zshrc"
   }
