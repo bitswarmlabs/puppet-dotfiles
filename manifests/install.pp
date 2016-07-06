@@ -19,6 +19,8 @@ define dotfiles::install(
     $home = "${dotfiles::config::home}/${name}"
   }
 
+  anchor { "dotfiles:install:${name}:begin": }
+  ->
   exec { "dotfiles:yadr:${name} git clone ":
     creates => "${home}/.yadr",
     command => "git clone --depth=1 ${dotfiles::config::repo_url} ${home}/.yadr || (rmdir ${home}/.yadr && exit 1)",
@@ -29,10 +31,14 @@ define dotfiles::install(
   }
   ~>
   ruby::rake { "dotfiles:yadr:${name} rake install":
-    cwd  => "${home}/.yadr",
-    task => 'install',
-    user => $name,
+    cwd         => "${home}/.yadr",
+    task        => 'install',
+    user        => $name,
+    logoutput   => true,
+    refreshonly => true,
   }
+  ->
+  anchor { "dotfiles:install:${name}:end": }
 
   exec { "backup ${name} zshrc":
     command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
