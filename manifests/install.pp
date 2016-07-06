@@ -33,11 +33,12 @@ define dotfiles::install(
   }
   ~>
   exec { "backup ${name} zshrc":
-    command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig; rm -f ${home}/.zshrc",
+    command => "cp -f ${home}/.zshrc ${home}/.zshrc.orig",
     path        => ['/bin', '/usr/bin'],
     user        => $name,
     onlyif      => "test -e ${home}/.zshrc",
     refreshonly => true,
+    require     => File["${home}/.zshrc"]
   }
   ~>
   ruby::rake { "dotfiles:yadr:${name} rake install":
@@ -50,6 +51,12 @@ define dotfiles::install(
   }
   ->
   Anchor["dotfiles:install:${name}:end"]
+
+  file { "${home}/.zshrc":
+    ensure => file,
+    source => '/etc/zsh/newuser.zshrc.recommended',
+    replace => false,
+  }
 
   if $_set_sh {
     if str2bool($dotfiles::config::manage_user) and ! defined(User[$name]) {
